@@ -4,9 +4,16 @@
 
 SynthSubtractor::SynthSubtractor(Module* inputs[])
 {
+
+  ModuleClock *master_clock = new ModuleClock(60);
+
+  int sequence[] = { 100, 4090, 1000, 500, 3000, 400, 3500, 2500 };
+  ModuleSequencer *sequencer = new ModuleSequencer(sequence);
+  sequencer->clock_input = master_clock;
+  
   // Patch up ocillator
   // osc.frequency_input = sequencer;      // Control the oscillator's requency using the SR knob
-  osc.frequency_input = inputs[SR_INPUT];
+  osc.frequency_input = sequencer;
   osc.wavetable_input = new ModuleConstant(0); // Select the first wavetable
   
   // Patch up LFO
@@ -14,7 +21,7 @@ SynthSubtractor::SynthSubtractor(Module* inputs[])
   // lfo.wavetable_input = new ModuleConstant(0); // select the first wavetable
   
   // Patch up ADSR
-  adsr.trigger_input = new ModuleClock(30);  
+  adsr.trigger_input = master_clock;  
   
   // Patch up lowpass filter
   lowpass_filter.audio_input = &osc;           // Route the audio from the oscillator into the filter

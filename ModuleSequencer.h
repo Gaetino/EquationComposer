@@ -18,8 +18,7 @@ class ModuleSequencer : public Module
 {
   
   public:
-    ModuleSequencer(int values[], int size);
-    ModuleSequencer();
+    ModuleSequencer(int values[]);
     uint32_t run();
     
     // Inputs
@@ -27,8 +26,7 @@ class ModuleSequencer : public Module
     
   private:
     int step;
-    int steps;
-    int *values;
+    int sequence[8];
     uint32_t old_clock;
 };
 

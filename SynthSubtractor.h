@@ -13,7 +13,6 @@ class SynthSubtractor : public Synth
     ModuleLowpassFilter lowpass_filter;
     ModuleVCA vca;
     ModuleLFO lfo;
-    ModuleSequencer sequencer;
     ModuleADSR adsr;
 };
 
