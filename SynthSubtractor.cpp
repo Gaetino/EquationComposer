@@ -4,35 +4,26 @@
 
 SynthSubtractor::SynthSubtractor(Module* inputs[])
 {
-
-  // Example with LFO controlling filter cutoff
-
-  // Create sequencer
-  // int sequence[8] = { 3000, 4094, 3000, 3600, 0, 4000, 500, 2500 }; // Just some random notes
-  // ModuleSequencer *sequencer = new ModuleSequencer(sequence, 8);
-  // sequencer->clock_input = new ModuleClock(120);
-
-  sequencer.clock_input = new ModuleConstant(120);
-  
   // Patch up ocillator
   // osc.frequency_input = sequencer;      // Control the oscillator's requency using the SR knob
-  osc.frequency_input = &sequencer;
+  osc.frequency_input = inputs[SR_INPUT];
   osc.wavetable_input = new ModuleConstant(0); // Select the first wavetable
   
   // Patch up LFO
-  lfo.frequency_input = inputs[PARAM2_INPUT];  // Control the frequency using the [2] knob
-  lfo.wavetable_input = new ModuleConstant(0); // select the first wavetable
+  // lfo.frequency_input = inputs[PARAM2_INPUT];  // Control the frequency using the [2] knob
+  // lfo.wavetable_input = new ModuleConstant(0); // select the first wavetable
+  
+  // Patch up ADSR
+  adsr.trigger_input = new ModuleClock(30);  
   
   // Patch up lowpass filter
   lowpass_filter.audio_input = &osc;           // Route the audio from the oscillator into the filter
-  lowpass_filter.cutoff_input = &lfo;          // Control the filter cutoff using the LFO
+  lowpass_filter.cutoff_input = &adsr;         // Control the filter cutoff using the LFO
   lowpass_filter.resonance_input = new ModuleConstant(0);  // Set the resonance to 0
   
   // Patch up VCA
-  // vca.cv_input = inputs[RESET_INPUT];
-  // vca.cv_input = new ModuleClock(120);
-
-  vca.cv_input = inputs[PARAM1_INPUT];         // Control the VCA level using the [1] knob
+  // vca.cv_input = inputs[PARAM1_INPUT];
+  vca.cv_input = &adsr;
   vca.audio_input = &lowpass_filter;           // Route the audio from the lowpass filter into the VCA
 
   this->last_module = &vca;

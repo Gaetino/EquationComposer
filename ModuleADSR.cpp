@@ -1,157 +1,124 @@
-/*
 #include "Arduino.h"
 #include "ModuleADSR.h"
 #include "Defines.h"
 
 ModuleADSR::ModuleADSR()
 {
-  this->output_range_low = 0;
-  this->output_range_high = 255;
-  
-  this->counter = 0;
   this->output = 0;
   this->state = ADSR_INACTIVE;
   
-  this->setTimes(10,500,500,500); // default ADSR durations
-  this->setLevels(255,100); // default attack, decay levels
-}
-
-// Shorthand way of setting all of the times (in milliseconds)
-
-void ModuleADSR::setTimes(uint32_t attack_time, uint32_t decay_time, uint32_t sustain_time, uint32_t release_time)
-{
-  // The values that are stored for attack_time, decay_time, sustain_time, and
-  // release_time represent the target value for this->counter to reach, assuming
-  // that it is incremented at SAMPLE_RATE per second.
+  this->set(10,1000,100,100); // default ADSR durations
   
-  this->attack_time   = (float)(SAMPLE_RATE * attack_time)/1000.0;
-  this->decay_time    = (float)(SAMPLE_RATE * decay_time)/1000.0;
-  this->sustain_time  = (float)(SAMPLE_RATE * sustain_time)/1000.0;
-  this->release_time  = (float)(SAMPLE_RATE * release_time)/1000.0;
+  this->trigged = false;  
 }
 
-// Shorthand way of setting all of the ADSR levels
+// 4 parameters to compute :
+// attack time (time to reach 100% volume) 
+// sustain value (the value where the sound must stop if the sound stay trigged) - % of the volume
+// decay time (the time that the sound goes from 100% to sustain value)
+// release time (time to go from sustain value to 0)
 
-void ModuleADSR::setLevels(uint32_t attack_level, uint32_t decay_level)
+
+// The fixed point will be fixed at 19 bits.
+
+void ModuleADSR::set(uint32_t attack_time, uint32_t decay_time, uint32_t sustain, uint32_t release_time)
 {
-  this->attack_level  = attack_level;
-  this->decay_level   = decay_level;
+  this->attack_time   = 10000/((attack_time>>2)+1); // 1 ms to 10 s
+  this->sustain  = sustain<<7; // convert to 19 bits
+  this->decay_time    = (524288-sustain)*50/(((decay_time>>4)+1)*44100); 
+  this->release_time  = sustain*200/(((release_time>>4)+1)*44100);
 }
 
 
-// Long winded ways of setting the individual attack, decay, sustain, and release times
-
-void ModuleADSR::setAttackTime(uint32_t duration_in_milliseconds)
+void ModuleADSR::setAttackTime(uint32_t value)
 {
-  this->attack_time = (float)(SAMPLE_RATE * duration_in_milliseconds)/1000.0;
+  this->attack_time   = 10000/((value>>2)+1);
 }
 
-void ModuleADSR::setDecayTime(uint32_t duration_in_milliseconds)
+void ModuleADSR::setDecayTime(uint32_t value)
 {
-  this->decay_time = (float)(SAMPLE_RATE * duration_in_milliseconds)/1000.0;
+  this->decay_time    = (524288-sustain)*50/(((decay_time>>4)+1)*44100); 
 }
 
-void ModuleADSR::setSustainTime(uint32_t duration_in_milliseconds)
+void ModuleADSR::setSustain(uint32_t value)
 {
-  this->sustain_time = (float)(SAMPLE_RATE * duration_in_milliseconds)/1000.0;
+  this->sustain  = value<<7; // convert from 12 bits to 19 bits
 }
 
-void ModuleADSR::setReleaseTime(uint32_t duration_in_milliseconds)
+void ModuleADSR::setReleaseTime(uint32_t value)
 {
-  this->release_time = (float)(SAMPLE_RATE * duration_in_milliseconds)/1000.0;
-}
-
-// Long winded ways of setting the levels for each stage of the ADSR
-
-void ModuleADSR::setAttackLevel(int level)
-{
-  this->attack_level = level;
-}
-
-void ModuleADSR::setDecayLevel(int level)
-{
-  this->decay_level = level;
+  this->release_time  = sustain*200/(((release_time>>4)+1)*44100);
 }
 
 
 uint32_t ModuleADSR::run()
 {
   uint32_t trigger = this->trigger_input->run();
-  trigger = this->mapInput(trigger, this->trigger_input, 0, 1);
   
-  // TODO: Only trigger ADSR if trigger has changed from 0 to 1
-  
-  if(trigger == 1)
+  // if the enveloppe is trigged and was not yet trigged before, we start the enveloppe
+  if(trigger >= MID_CV && !trigged)
   {
     state = ADSR_ATTACK;
-    counter = 1;
+    trigged = true;
+    // Serial.println("trigged");
+  }
+  
+  // if the enveloppe is stopped to be trigged, and was trigged before, we start the release phase
+  if(trigger < MID_CV && trigged)
+  {
+    state = ADSR_RELEASE;
+    trigged = false;
+    //Serial.println("untrigged");
   }
   
   
   switch(this->state)
   {
     case ADSR_ATTACK: 
-      
-      if(counter == attack_time) 
+      if(output >= 524288) // the volume reaches 100 % volume (19 bits)
       {
-        state = ADSR_DECAY;
-        counter = 1;
-        output = attack_level;
+        state = ADSR_DECAY; 
+        // Serial.println("decay");
       }
       else
       {
-        output = (float)((float)counter / (float)attack_time) * attack_level;
+        output += attack_time; // we increase the volume until 100 %
       }
-      
       break;    
       
     case ADSR_DECAY:
-
-      if(counter == decay_time) 
+	
+      // We decrease the volume until sustain value is reached
+	  
+      output -= decay_time;
+	  
+      if(output<=sustain)
       {
         state = ADSR_SUSTAIN;
-        counter = 1;
-        output = decay_level;
+	// Serial.println("sustain");
       }
-      else
-      {
-        output = attack_level - ((float)((float)counter / (float)decay_time) * (attack_level - decay_level));
-      }
-
       break;
 
-    case ADSR_SUSTAIN:
-      
-      if(counter == sustain_time)
-      {
-        state = ADSR_RELEASE;
-        counter = 1;
-      }
-      else
-      {
-        // no need to change the value of output.  It should be set correctly already.
-      }
-      
-      break;
-
+    // We do nothing in the sustain case. The sound stays played until the trigger is trigged off
+	  
     case ADSR_RELEASE:
       
-      if(counter == release_time)
+      // We decrease the sound until 0 is reached
+	 
+      if(output>=release_time)
       {
-        output = 0;
-        counter = 1;
-        state = ADSR_INACTIVE;
+        output -= release_time;       
       }
       else
       {
-        output = decay_level - ((float)((float)counter / (float)release_time) * decay_level);
+        state = ADSR_INACTIVE;
+	// Serial.println("end");
+	output = 0;
       }
       
       break;
   }
+  return (output>>11); // convert from 19 bits to 12 bits
   
-  if (state != ADSR_INACTIVE) counter++;
-  
-  return(output);
 }
-*/
+

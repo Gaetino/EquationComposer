@@ -6,7 +6,7 @@
  *  |                 output >
  *  +------------------------+
  */
-/*
+ 
 #ifndef ModuleADSR_h
 #define ModuleADSR_h
 
@@ -25,22 +25,28 @@ class ModuleADSR : public Module
   public:
     ModuleADSR();
     uint32_t run();
+	
+    void set(uint32_t attack_time, uint32_t decay_time, uint32_t sustain, uint32_t release_time);
+    void setAttackTime(uint32_t value);
+    void setDecayTime(uint32_t value);
+    void setSustain(uint32_t value);
+    void setReleaseTime(uint32_t value);
+    
+    // Inputs
+    Module *trigger_input;     
     
   private:
     uint16_t state;         // ADSR_ATTACK, ADSR_DECAY, etc..
     uint32_t counter;
+    uint32_t output;
+    boolean trigged;
     
     uint32_t attack_time;   // measured in milliseconds
     uint32_t decay_time;    // measured in milliseconds
-    uint32_t sustain_time;  // measured in milliseconds
+    uint32_t sustain;  // measured in milliseconds
     uint32_t release_time;  // measured in milliseconds
-    
-    uint32_t attack_level;   // 0 to 255
-    uint32_t decay_level;    // 0 to 255
-    
-    // Inputs
-    Module *trigger_input; 
+
 };
 
 #endif
-*/
+

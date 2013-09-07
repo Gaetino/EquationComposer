@@ -24,6 +24,7 @@ class ModuleClock : public Module
     uint32_t counter;
     uint32_t bpm;
     uint32_t bpm_ticks[255];
+    uint32_t bpm_half_ticks[255];
 };
 
 #endif

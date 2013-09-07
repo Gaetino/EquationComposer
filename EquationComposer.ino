@@ -40,6 +40,7 @@ TODO:
   - write documentation (as HTML)
   - add reset input to equation playback module and test
   - use better datatypes than the uint32_t that I use out of laziness
+  - add clock division input to ModuleClock
   
 // =========================== - 80 column - ===================================
 12345678901234567890123456789012345678901234567890123456789012345678901234567890

@@ -14,6 +14,7 @@ class SynthSubtractor : public Synth
     ModuleVCA vca;
     ModuleLFO lfo;
     ModuleSequencer sequencer;
+    ModuleADSR adsr;
 };
 
 #endif

@@ -12,6 +12,7 @@
 #include "ModuleConstant.h"
 #include "ModuleClock.h"
 #include "ModuleSequencer.h"
+#include "ModuleADSR.h"
 
 class Synth
 {
