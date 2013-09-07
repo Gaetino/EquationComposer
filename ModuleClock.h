@@ -5,6 +5,25 @@
  *  |                      |
  *  |               output >
  *  +----------------------+
+ *
+ *
+ *  The clock module produces a square wave with a 50% duty cycle starting low.
+ *           _____       _____
+ *          |     |     |     |
+ *     _____|     |_____|     |  etc...
+ *
+ *  The speed is controlled via a BPM (beats per minute) value supplied during
+ *  initialization:
+ * 
+ *    int beats_per_minute = 120;
+ *    ModuleClock *module_clock = new ModuleClock(beats_per_minute);
+ *    adsr.trigger_input = module_clock;
+ *
+ *  Here's another example:
+ *
+ *    ModuleADSR adsr;
+ *    adsr.trigger_input = new ModuleClock(60);
+ *
  */
  
 #ifndef ModuleClock_h
