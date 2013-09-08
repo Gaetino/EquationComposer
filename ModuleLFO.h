@@ -22,16 +22,19 @@ class ModuleLFO : public Module
   
   public:
     ModuleLFO();
-    uint32_t run();
-    
+
     // Inputs
     Module *frequency_input;
     Module *wavetable_input;
     
   private:
+  
+    // Functions
+    uint32_t compute();  
+  
+    // Variables
     uint32_t wavetable_index;
     uint32_t rate;
-    
     uint16_t wavetables[2][WAVE_SAMPLES];  // Array holding the wavetable data
     uint16_t number_of_wavetables;         // The number of wavetables (surprise, surprise)
     uint16_t wavetable;                    // The currenly selected wavetable

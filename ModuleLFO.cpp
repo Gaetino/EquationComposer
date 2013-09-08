@@ -26,16 +26,16 @@ ModuleLFO::ModuleLFO()
   }
 }
 
-uint32_t ModuleLFO::run()
+uint32_t ModuleLFO::compute()
 {
   // Read frequency input.  
   // Convert the standard 12 bit CV value to a 7-bit value, which ranges from 0 to 127
-  rate = this->frequency_input->run() >> 5;
+  rate = this->readInput(frequency_input) >> 5;
   
   // Read wavetable input
   // TODO: Once there are enough wavetables, remove the map() line below and instead
   // bitshift the value down to the correct range.
-  wavetable = this->wavetable_input->run();
+  wavetable = this->readInput(wavetable_input);
   wavetable = map(wavetable, 0, MAX_CV, 0, this->number_of_wavetables - 1);
   
   fixed_point_10_22_index += increments[rate];

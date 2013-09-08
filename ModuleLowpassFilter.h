@@ -24,9 +24,7 @@ class ModuleLowpassFilter : public Module
     
     // Methods
     ModuleLowpassFilter();
-    uint32_t run();
-    uint32_t low();
-    uint32_t high();
+    uint32_t compute();
     
     // Inputs
     Module *audio_input; 

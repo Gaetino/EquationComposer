@@ -7,7 +7,7 @@ ModuleConstant::ModuleConstant(int value)
   this->value = value;
 }
 
-uint32_t ModuleConstant::run()
+uint32_t ModuleConstant::compute()
 {
   return(this->value);
 }

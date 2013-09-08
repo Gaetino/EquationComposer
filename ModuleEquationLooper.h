@@ -22,7 +22,7 @@ class ModuleEquationLooper : public Module
   
   public:
     ModuleEquationLooper();
-    uint32_t run();
+    uint32_t compute();
     
     // Inputs
     Module *sample_rate_input;

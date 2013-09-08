@@ -36,7 +36,7 @@ class ModuleClock : public Module
 {
   public:
     ModuleClock(uint32_t bpm);
-    uint32_t run();
+    uint32_t compute();
     
   private:
     uint32_t rate;

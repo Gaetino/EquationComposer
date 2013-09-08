@@ -48,6 +48,7 @@ TODO:
 
 */
 
+
 #include "defines.h"
 #include "SynthEQ1.h"
 #include "SynthSubtractor.h"
@@ -66,6 +67,7 @@ TODO:
 // Global variables
 uint32_t equation = 0;
 uint32_t output = 0;
+double cycle = 0;
 
 // Define the input modules, which are global.  It might seem strange
 // to use a "module" just for an input, but it's necessary because of the way
@@ -171,12 +173,16 @@ void audioRateInterrupt()
 
   switch(synth)
   {
-    case 1: output = synth_subtractor.run(); break;    
-    case 2: output = synth_eq1.run(); break;
+    case 1: output = synth_subtractor.run(cycle); break;    
+    case 2: output = synth_eq1.run(cycle); break;
   }
   
   // I'm using dacc_write_conversion_data() because it writes 12-bit data to
   // the DAC as opposed to 8-bit resolution that analogWrite() does.
   dacc_write_conversion_data(DACC_INTERFACE, output);
+  
+  // Increment the global time.  This variable is used by modules in their
+  // output caching code. (see Module.cpp)
+  cycle++;
 }
 

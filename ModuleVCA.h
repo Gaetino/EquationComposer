@@ -15,14 +15,10 @@
 
 class ModuleVCA : public Module
 {
+  private:
+    uint32_t compute();  
   
-  public:
-    
-    // Methods
-    uint32_t run();
-    uint32_t low();
-    uint32_t high();
-    
+  public:    
     // Inputs
     Module *audio_input;  
     Module *cv_input;  

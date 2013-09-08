@@ -25,16 +25,16 @@ ModuleOsc::ModuleOsc()
   }
 }
 
-uint32_t ModuleOsc::run()
-{  
+uint32_t ModuleOsc::compute()
+{
   // Read the frequency
   // Convert the standard 12 bit CV value to a 7-bit value, which ranges from 0 to 127
-  frequency = this->frequency_input->run() >> 5;  
+  frequency = this->readInput(frequency_input) >> 5;  
   
   // Read the wavetable input and map it to the appropriate range
   // TODO: Once the number of wavetables is known, remove this map function
   // and bitshift the input down to the correct range.
-  wavetable = this->wavetable_input->run();
+  wavetable = this->readInput(wavetable_input);
   wavetable = map(wavetable, 0, MAX_CV, 0, 1);
   
   // Calculate the index into the wavetable

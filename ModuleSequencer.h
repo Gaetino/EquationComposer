@@ -19,7 +19,7 @@ class ModuleSequencer : public Module
   
   public:
     ModuleSequencer(int values[]);
-    uint32_t run();
+    uint32_t compute();
     
     // Inputs
     Module *clock_input;

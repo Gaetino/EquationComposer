@@ -13,7 +13,7 @@ uint32_t ModuleDigitalInput::read()
     return(this->value * MAX_CV);
 }
 
-uint32_t ModuleDigitalInput::run()
+uint32_t ModuleDigitalInput::compute()
 { 
   return(this->value);
 }

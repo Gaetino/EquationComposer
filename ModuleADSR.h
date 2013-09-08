@@ -24,7 +24,7 @@ class ModuleADSR : public Module
 {
   public:
     ModuleADSR();
-    uint32_t run();
+    uint32_t compute();
 	
     void set(uint32_t attack_time, uint32_t decay_time, uint32_t sustain, uint32_t release_time);
     void setAttackTime(uint32_t value);

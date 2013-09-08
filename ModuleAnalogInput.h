@@ -16,13 +16,14 @@
 
 class ModuleAnalogInput : public ModuleInput
 {
-  
+  private:
+      uint32_t compute();
+      
   public:
     
     // Methods
     ModuleAnalogInput(int input_pin);    
     uint32_t read();
-    uint32_t run();
     
     // Variables
     uint32_t value;   // The value of the input

@@ -13,9 +13,9 @@ ModuleSequencer::ModuleSequencer(int values[])
   }
 }
 
-uint32_t ModuleSequencer::run()
+uint32_t ModuleSequencer::compute()
 {
-  uint32_t clock = this->clock_input->run();
+  uint32_t clock = this->readInput(clock_input);
   
   // Step the sequencer on the rising edge 
   if((clock > MID_CV) && (old_clock < MID_CV))

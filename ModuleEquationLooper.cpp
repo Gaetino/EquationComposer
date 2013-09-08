@@ -14,16 +14,16 @@ ModuleEquationLooper::ModuleEquationLooper()
   fixed_point_20_12_index = 0;
 }
 
-uint32_t ModuleEquationLooper::run()
+uint32_t ModuleEquationLooper::compute()
 {
   // Read inputs
   // For loop_start and loop_length, I'm dropping some of the least significant 
   // bits in order to remove any noise from the incoming signal.
   
-  increment_by = this->sample_rate_input->run();              // range: 0 - 4095
-  loop_length = (this->loop_length_input->run() >> 3) * 150;  // range: (0 - 511) * 150
-  loop_start = (this->loop_start_input->run() >> 3) * 800;    // range: (0 - 511) * 800
-  equation = this->equation_input->run() >> 8;                // range: 0 - 15, which is 2^4
+  increment_by = this->readInput(sample_rate_input);              // range: 0 - 4095
+  loop_length = (this->readInput(loop_length_input) >> 3) * 150;  // range: (0 - 511) * 150
+  loop_start = (this->readInput(loop_start_input) >> 3) * 800;    // range: (0 - 511) * 800
+  equation = this->readInput(equation_input) >> 8;                // range: 0 - 15, which is 2^4
   
   fixed_point_20_12_index += increment_by;
   

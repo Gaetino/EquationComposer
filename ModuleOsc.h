@@ -23,7 +23,7 @@ class ModuleOsc : public Module
   
   public:
     ModuleOsc();
-    uint32_t run();
+    uint32_t compute();
     
     // Inputs
     Module *frequency_input;   // Input module for controlling frequency

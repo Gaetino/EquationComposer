@@ -51,9 +51,9 @@ void ModuleADSR::setReleaseTime(uint32_t value)
 }
 
 
-uint32_t ModuleADSR::run()
+uint32_t ModuleADSR::compute()
 {
-  uint32_t trigger = this->trigger_input->run();
+  uint32_t trigger = readInput(this->trigger_input);
   
   // if the enveloppe is trigged and was not yet trigged before, we start the enveloppe
   if(trigger >= MID_CV && !trigged)

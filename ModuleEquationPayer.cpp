@@ -18,11 +18,11 @@ uint32_t ModuleEquationPlayer::run()
 {
 
   // Read inputs
-  equation     = this->equation_input->run() >> 7; // range: 0 - 31, which is 2^5  
-  increment_by = this->sample_rate_input->run();   // range: 0 - 4095
-  p1 = this->param1_input->run() >> 4; // range: 0 - 255 (2^8)
-  p2 = this->param2_input->run() >> 4; // range: 0 - 255 (2^8)
-  p3 = this->param3_input->run() >> 4; // range: 0 - 255 (2^8)
+  equation     = this->readInput(equation_input) >> 7; // range: 0 - 31, which is 2^5  
+  increment_by = this->readInput(sample_rate_input);   // range: 0 - 4095
+  p1 = this->readInput(param1_input) >> 4; // range: 0 - 255 (2^8)
+  p2 = this->readInput(param2_input) >> 4; // range: 0 - 255 (2^8)
+  p3 = this->readInput(param3_input) >> 4; // range: 0 - 255 (2^8)
   
   fixed_point_20_12_index += increment_by;
   

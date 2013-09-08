@@ -22,8 +22,8 @@ class ModuleDigitalInput : public ModuleInput
     // Methods
     ModuleDigitalInput(int pin);
     uint32_t read();
-    uint32_t run();
-
+    uint32_t compute();
+    
     // Variables
     uint32_t value;   // The value of the input
     int pin;

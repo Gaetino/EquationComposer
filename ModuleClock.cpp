@@ -16,7 +16,7 @@ ModuleClock::ModuleClock(uint32_t bpm)
 
 }
 
-uint32_t ModuleClock::run()
+uint32_t ModuleClock::compute()
 {
   this->counter = this->counter + 1;
 

@@ -20,7 +20,7 @@ class Synth
   
     // Methods
     Synth(); // Constructor
-    uint32_t run();
+    uint32_t run(double cycle);
     
     // 'last_module' is the last module in the synth.  
     // This module's run() method will be called by the synth.
