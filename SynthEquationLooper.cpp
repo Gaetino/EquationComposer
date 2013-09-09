@@ -1,8 +1,8 @@
 #include "Arduino.h"
 #include "Defines.h"
-#include "SynthEQ1.h"
+#include "SynthEquationLooper.h"
 
-SynthEQ1::SynthEQ1(Module* inputs[])
+SynthEquationLooper::SynthEquationLooper(Module* inputs[])
 {
   equation_looper.equation_input = inputs[MOD_INPUT];
   equation_looper.sample_rate_input = inputs[SR_INPUT];

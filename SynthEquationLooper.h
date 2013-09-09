@@ -1,14 +1,14 @@
-#ifndef SynthEQ1_h
-#define SynthEQ1_h
+#ifndef SynthEquationLooper_h
+#define SynthEquationLooper_h
 
 #include "Arduino.h"
 #include "Synth.h"
 
-class SynthEQ1 : public Synth
+class SynthEquationLooper : public Synth
 {
   public:
   
-    SynthEQ1(Module *inputs[]); 
+    SynthEquationLooper(Module *inputs[]); 
    
     // Create modules
     // These modules will be wired together in the constructor.

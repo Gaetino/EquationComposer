@@ -9,7 +9,7 @@ class ModuleEquationPlayer : public Module
   
   public:
     ModuleEquationPlayer();
-    uint32_t run();
+    uint32_t compute();
     
     // Inputs
     Module *equation_input;
@@ -17,6 +17,7 @@ class ModuleEquationPlayer : public Module
     Module *param1_input;
     Module *param2_input;
     Module *param3_input;
+    Module *reset_input;
     
   private:
     int equation;
@@ -28,6 +29,8 @@ class ModuleEquationPlayer : public Module
     uint32_t p1;
     uint32_t p2;
     uint32_t p3;
+    
+    uint32_t reset;
     
    
     // 19.13 fixed point number (using the upper 19 bits for holding the usable

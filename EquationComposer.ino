@@ -23,7 +23,6 @@ Credits:
   Includes some libraries from Mozzi (http://sensorium.github.io/Mozzi/)
   Additional programming by Gaétan Ro
   Special thanks to Josh from Toppobrillo for his support and mentoring
-  Special thanks to Carson Day for having such amazing hair
 
 Equation testing tools:
   http://wurstcaptures.untergrund.net/music/
@@ -50,8 +49,12 @@ TODO:
 
 
 #include "defines.h"
-#include "SynthEQ1.h"
+
+// Each synth must be included here
+#include "SynthEquationPlayer.h"
+#include "SynthEquationLooper.h"
 #include "SynthSubtractor.h"
+
 #include "ModuleAnalogInput.h"
 #include "ModuleDigitalInput.h"
 #include "DueTimer.h"
@@ -99,8 +102,9 @@ Module *inputs[] = {
 };
 
 // Create the synths
-SynthEQ1 synth_eq1(inputs);
 SynthSubtractor synth_subtractor(inputs);
+SynthEquationPlayer synth_equation_player(inputs);
+SynthEquationLooper synth_equation_looper(inputs);
 
 void setup()
 {
@@ -124,11 +128,6 @@ void setup()
   // I don't want to introduce any unknowns into the code.
   //
   // REG_ADC_MR = (REG_ADC_MR & 0xFFF0FFFF) | 0x00020000;
-
-  // Setup the timer if NOT in debug mode 
-  // #ifndef DEBUG
-  //   setup_timer();
-  // #endif
   
   // Enable the DAC
   analogWrite(DAC1,0);
@@ -169,12 +168,17 @@ void loop()
 // This method gets called at around 44.1 Hz
 void audioRateInterrupt()
 {
-  int synth = 1;  // Temporarily hard coded while developing the code.
+
+  // When more synths are added, the bit shifting below
+  // will need updating to access the additional synths.
+  int synth = equation >> 10; // Convert to 2-bit value  
 
   switch(synth)
   {
     case 1: output = synth_subtractor.run(cycle); break;    
-    case 2: output = synth_eq1.run(cycle); break;
+    case 2: output = synth_equation_looper.run(cycle); break;
+    case 3: output = synth_equation_player.run(cycle); break;
+    case 4: output = synth_equation_player.run(cycle); break;
   }
   
   // I'm using dacc_write_conversion_data() because it writes 12-bit data to

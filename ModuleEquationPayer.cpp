@@ -11,18 +11,20 @@ ModuleEquationPlayer::ModuleEquationPlayer()
   p1 = 0;
   p2 = 0;
   p3 = 0;
+  reset = 0;
   fixed_point_20_12_index = 0;
 }
 
-uint32_t ModuleEquationPlayer::run()
+uint32_t ModuleEquationPlayer::compute()
 {
 
   // Read inputs
   equation     = this->readInput(equation_input) >> 7; // range: 0 - 31, which is 2^5  
   increment_by = this->readInput(sample_rate_input);   // range: 0 - 4095
-  p1 = this->readInput(param1_input) >> 4; // range: 0 - 255 (2^8)
-  p2 = this->readInput(param2_input) >> 4; // range: 0 - 255 (2^8)
-  p3 = this->readInput(param3_input) >> 4; // range: 0 - 255 (2^8)
+  p1 = this->readInput(param1_input) >> 4;    // range: 0 - 255 (2^8)
+  p2 = this->readInput(param2_input) >> 4;    // range: 0 - 255 (2^8)
+  p3 = this->readInput(param3_input) >> 4;    // range: 0 - 255 (2^8)
+  reset = this->readInput(reset_input) >> 4;  // range: 0 - 255 (2^8)
   
   fixed_point_20_12_index += increment_by;
   
