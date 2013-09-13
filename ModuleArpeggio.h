@@ -30,10 +30,9 @@ class ModuleArpeggio : public Module
     ModuleArpeggio();
 
     // Inputs
+    Module *CV_input;
     Module *scale;
-    Module *mode;
-    Module *transpo;
-    
+
   private:
   
     // Functions
