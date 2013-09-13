@@ -118,7 +118,7 @@ uint32_t ModuleADSR::compute()
       
       break;
   }
-  return (output>>11); // convert from 19 bits to 12 bits
+  return (output>>7); // convert from 19 bits to 12 bits
   
 }
 
