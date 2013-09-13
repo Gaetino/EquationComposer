@@ -11,7 +11,7 @@ ModuleArpeggio::ModuleArpeggio()
 arp ModuleArpeggio::compute_arpeg()
 {
   uint32_t scale;
-  uint32_t CV;
+  int8_t CV;
   // Read scale input.  
   // Convert the standard 12 bit CV value to a 3-bit value, which ranges from 0 to 7
   scale = this->scale_input->run() >> 9;
