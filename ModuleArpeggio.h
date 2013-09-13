@@ -31,7 +31,7 @@ class ModuleArpeggio : public Module
 
     // Inputs
     Module *CV_input;
-    Module *scale;
+    Module *scale_input;
 
   private:
   
