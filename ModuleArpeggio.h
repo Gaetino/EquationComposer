@@ -20,7 +20,7 @@
 
 struct arp
 {
-    uint32_t note[ARPEG_STEP];
+    int8_t note[ARPEG_STEP];
 };
 
 class ModuleArpeggio : public Module
